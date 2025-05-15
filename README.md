@@ -9,7 +9,7 @@ Before you begin, ensure you have met the following requirements:
 *   Python (version 3.8 or higher recommended)
 *   pip (Python package installer)
 *   Git (for cloning the repository)
-*   A virtual environment tool (like `venv`, which comes with Python)
+*   A virtual environment (Recommended to create a virtual environment for this project)
 
 ## Installation and Setup
 
