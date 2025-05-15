@@ -1,0 +1,394 @@
+/* REMOVE THIS LINE: @import url('https://fonts.googleapis.com/css?family=Dosis:700'); */
+
+body {
+    background: #fff; /* White background */
+    color: #000; /* Black text */
+    font-family: "Dosis", sans-serif;
+    margin: 0;
+    padding: 20px; /* Added some padding to the body */
+}
+
+.create-note-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    padding-top: 3vh; /* Slightly reduced top padding */
+    margin-bottom: 40px; /* Added margin below the create button container */
+    width: 100%; 
+}
+
+/* Call to Action Button Style */
+button, .cta-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 25px 40px;
+  border: unset;
+  border-radius: 15px;
+  color: #212121;
+  z-index: 1;
+  background: #e8e8e8;
+  position: relative;
+  font-weight: 1000;
+  font-size: 35px;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  transition: all 250ms;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+button::before, .cta-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 15px;
+  background-color: #212121;
+  z-index: -1;
+  -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+  transition: all 250ms;
+}
+button:hover, .cta-button:hover {
+  color: #e8e8e8;
+}
+button:hover::before, .cta-button:hover::before {
+  width: 100%;
+}
+.cta-button svg {
+    width: 1em;
+    height: 1em;
+    margin-left: 15px;
+    fill: currentColor;
+    transition: transform 0.3s ease-in-out;
+    z-index: 2;
+}
+.cta-button:hover svg {
+    transform: rotate(90deg);
+}
+
+/* Styles from test.html for note display */
+.notes-area-wrapper { /* New wrapper for all date groups */
+    width: 100%;
+    max-width: 1750px; /* Adjust as needed */
+    margin-left: 5%;  /* Shift to the left, adjust percentage as needed */
+    margin-right: auto; /* Keep it from going too far right if window is wide */
+}
+
+.date-group {
+    width: 100%;
+    /* max-width: 950px; Removed, as .notes-area-wrapper now controls this */
+    margin: 40px 0; /* Adjusted margin, auto for left/right is removed */
+    padding: 0 15px;
+}
+
+.date-heading {
+    font-size: 1.7rem; /* Slightly adjusted font size */
+    color: #333;
+    margin-bottom: 20px; /* Increased margin */
+    border-bottom: 4px solid #eee;
+    padding-bottom: 8px; /* Increased padding */
+}
+
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(260px, 1fr)); /* Slightly increased min card width */
+    gap: 40px; /* Increased gap */
+}
+
+.note-card {
+    padding: 20px;
+    border: unset;
+    border-radius: 15px;
+    color: #212121;
+    z-index: 1;
+    background: #f0f0f0; /* Slightly lighter card background */
+    position: relative;
+    min-height: 160px; /* Ensures a minimum height */
+    display: flex;
+    flex-direction: column; /* Stacks children vertically */
+    justify-content: space-between; /* Pushes actions to the bottom */
+    overflow: hidden; /* This was for the card itself, not title/content specifically */
+    -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.22);
+    box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.22);
+    transition: all 250ms;
+    overflow: hidden;
+    cursor: default; /* Changed default cursor for card, actions are clickable */
+    text-decoration: none;
+}
+
+.note-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    border-radius: 15px;
+    background-color: #2c3e50; /* Darker blue/grey for card hover background */
+    z-index: -1;
+    -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+    box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+    transition: all 250ms;
+}
+
+.note-card:hover {
+    color: #ecf0f1; /* Light text on hover */
+}
+
+.note-card:hover::before {
+    width: 100%;
+}
+
+.note-title {
+    margin-bottom: 12px;
+    font-size: 1.5rem; 
+    font-weight: bold;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.note-content-preview {
+    font-size: 1.3rem;
+    color: #555;
+    flex-grow: 1; /* This helps push actions down if content is short */
+    font-weight: 600;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    /* max-height: 4.2em; /* REMOVED */
+    /* overflow: hidden; /* REMOVED */
+    /* text-overflow: ellipsis; /* REMOVED - truncatewords handles ellipsis */
+}
+
+.note-content-full {
+    font-size: 1.2rem;
+    color: #444;
+    flex-grow: 1; /* This helps push actions down if content is short */
+    font-weight: 600;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    display: none; /* Ensure it's hidden by default via CSS too */
+}
+
+.show-more-link {
+    display: none; /* JS will control this */
+    font-size: 1rem;
+    color: #3498db;
+    text-decoration: none;
+    margin-top: 5px; /* Add some space above the link */
+    margin-bottom: 10px; /* Space before actions */
+    cursor: pointer;
+    align-self: flex-start; 
+}
+
+.show-more-link:hover {
+    text-decoration: underline;
+}
+
+.note-card.expanded {
+    /* You could add specific styles for the expanded card if needed */
+    /* For example, a slightly different background or border */
+}
+
+.note-card:hover .note-content-preview,
+.note-card:hover .note-content-full {
+    color: #bdc3c7;
+}
+
+.note-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px; /* Increased gap */
+    margin-top: auto;
+}
+
+/* Edit and Delete Button Styles (bottom-to-top animation) */
+.edit-button, .delete-button {
+    padding: 10px 16px; /* Adjusted padding */
+    border: unset;
+    border-radius: 10px; /* Slightly adjusted radius */
+    color: #e8e8e8; 
+    z-index: 1;
+    background: #4a4a4a; /* Darker grey for buttons */
+    position: relative;
+    font-weight: bold;
+    font-size: 0.9rem; /* Adjusted font size */
+    -webkit-box-shadow: 2px 4px 10px -2px rgba(0,0,0,0.2);
+    box-shadow: 2px 4px 10px -2px rgba(0,0,0,0.2);
+    transition: all 250ms;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.edit-button::before, .delete-button::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 0;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #3498db; /* Blue for edit hover */
+    z-index: -1;
+    transition: all 250ms;
+}
+
+.edit-button:hover, .delete-button:hover {
+    color: #fff;
+}
+
+.edit-button:hover::before, .delete-button:hover::before {
+    height: 100%;
+}
+
+.delete-button {
+    background: #c0392b;
+}
+
+.delete-button::before {
+    background-color: #e74c3c;
+}
+
+.no-notes-message {
+    text-align: center;
+    margin-top: 50px; /* More margin for this message */
+    font-size: 1.2rem;
+    color: #777;
+}
+
+.notes-area-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh;
+    justify-content: center;
+}
+.form-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+.form-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 18px;
+}
+.form-wrapper {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px -8px rgba(0,0,0,0.13);
+    padding: 48px 56px 36px 56px;
+    min-width: 370px;
+    max-width: 520px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 28px;
+    margin-top: 18px;
+}
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.form-wrapper label {
+    font-size: 1.5rem;
+    font-weight: 700; /* Or keep 400 if you prefer labels not emphasized */
+    color: #222;
+    margin-bottom: 7px;
+}
+
+.form-wrapper input[type="text"],
+.form-wrapper textarea {
+    background: #f8f9fa;
+    border: 1.5px solid #111;
+    border-radius: 9px;
+    padding: 13px 15px;
+    font-size: 1.3rem;
+    color: #222;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px -3px rgba(0,0,0,0.07);
+    outline: none;
+    font-family: "Dosis", sans-serif;
+    font-weight: 500; /* Set to 400 for normal weight */
+}
+.form-wrapper input[type="text"]:focus,
+.form-wrapper textarea:focus {
+    border: 1.5px solid #111;
+    box-shadow: 0 4px 16px -6px #1112;
+}
+.form-wrapper textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+.form-cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #111;
+    color: #fff;
+    font-size: 1.13rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    box-shadow: 0 2px 10px -2px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.13s, box-shadow 0.13s, background 0.2s;
+    width: auto;
+    min-width: 150px; /* Optional: set a min-width if desired */
+    align-self: center; /* Changed from flex-start to center */
+}
+
+.form-cta-button svg {
+    width: 22px;
+    height: 22px;
+    margin-left: 2px;
+    transition: transform 0.18s;
+}
+.form-cta-button:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 18px -4px #1118;
+    background: linear-gradient(90deg, #111 0%, #222 100%);
+}
+.form-cta-button:hover svg {
+    transform: translateX(3px) scale(1.08);
+}
+.back-link {
+    background: #fff;
+    color: #111;
+    font-size: 1.13rem;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 26px; /* Reference padding */
+    margin-top: 32px;
+    box-shadow: 0 2px 8px -2px rgba(0,0,0,0.08);
+    display: inline-block;
+    text-decoration: none;
+    border: 1.5px solid #111;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    width: auto; /* Explicitly set for consistency, though inline-block defaults to this */
+    text-align: center; /* Ensures text is centered */
+}
+.back-link:hover {
+    background: #111;
+    color: #fff;
+    box-shadow: 0 4px 16px -4px #1118;
+}
+.help-text {
+    color: #888;
+}
+.error-text {
+    color: #d32f2f;
+    font-size: 0.98em;
+}
