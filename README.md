@@ -83,7 +83,6 @@ notes/                  # This is your main project root (e.g., d:\Learning Djan
 │   └── views.py        # Views (request handlers) for this app
 ├── static/             # Optional: Project-wide static files (CSS, JS, images)
 ├── templates/          # Optional: Project-wide HTML templates
-├── .gitignore          # Specifies intentionally untracked files that Git should ignore
 ├── db.sqlite3          # SQLite database file
 ├── manage.py           # Django's command-line utility
 └── requirements.txt    # Project dependencies
