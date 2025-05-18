@@ -1,0 +1,32 @@
+services:
+  - type: web # Django application
+    name: my-django-notes-app # Choose a name for your service
+    env: python
+    plan: free # Or your desired plan
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn notes.wsgi # Replace 'notes.wsgi' if your project name is different
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true # Render will generate a secret key
+      - key: PYTHON_VERSION
+        value: 3.11 # Specify your Python version
+      - key: DATABASE_URL
+        fromDatabase:
+          name: notes-db # Name of your database service (see below)
+          property: connectionString
+      - key: WEB_CONCURRENCY # Optional: for Gunicorn worker processes
+        value: 4 
+      - key: DEBUG # Set to False for production
+        value: False
+
+  - type: pserv # PostgreSQL Database
+    name: notes-db # Name for your database service
+    env: postgres
+    plan: free # Or your desired plan
+    postgresMajorVersion: 14 # Or your desired PostgreSQL version
+    disk:
+      name: notes-db-disk
+      sizeGB: 1 # Or your desired disk size
