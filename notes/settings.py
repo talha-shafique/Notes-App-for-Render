@@ -15,34 +15,43 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = []
-# For Railway, they provide a domain like your-service-name.up.railway.app
-# You can get this from your Railway dashboard once deployed, or Railway might set an env var.
-RAILWAY_STATIC_URL = os.environ.get('RAILWAY_STATIC_URL') # Railway often sets this
-if RAILWAY_STATIC_URL:
-    # RAILWAY_STATIC_URL might be the full URL (e.g., https://...). We need the hostname.
-    parsed_url = urlparse(RAILWAY_STATIC_URL)
-    if parsed_url.hostname:
-        ALLOWED_HOSTS.append(parsed_url.hostname)
 
-# It's a good idea to also add your specific service domain if you know it,
-# e.g., 'my-django-notes-app.up.railway.app' (replace with your actual Railway service domain)
-# You can find this on your Railway project's settings page after the first deploy attempt.
-# Example:
-# MY_RAILWAY_APP_DOMAIN = os.environ.get('MY_RAILWAY_APP_DOMAIN') # If you set this custom env var
-# if MY_RAILWAY_APP_DOMAIN:
-#     ALLOWED_HOSTS.append(MY_RAILWAY_APP_DOMAIN)
+# Get the domain from RAILWAY_PUBLIC_DOMAIN if it's set
+RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
+if RAILWAY_PUBLIC_DOMAIN:
+    # RAILWAY_PUBLIC_DOMAIN might be just the hostname or a full URL.
+    # If it's a full URL (e.g., https://domain.com), parse it.
+    # If it's just a hostname (e.g., domain.com), use it directly.
+    if '://' in RAILWAY_PUBLIC_DOMAIN: # Simple check if it looks like a full URL
+        parsed_url = urlparse(RAILWAY_PUBLIC_DOMAIN)
+        if parsed_url.hostname:
+            ALLOWED_HOSTS.append(parsed_url.hostname)
+    else: # Assume it's already a hostname
+        ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
+
+# You can remove or comment out the old RAILWAY_STATIC_URL logic for ALLOWED_HOSTS
+# if RAILWAY_PUBLIC_DOMAIN is reliably providing your app's main domain.
+# Example of old logic you might have:
+# RAILWAY_STATIC_URL = os.environ.get('RAILWAY_STATIC_URL')
+# if RAILWAY_STATIC_URL:
+#     parsed_static_url = urlparse(RAILWAY_STATIC_URL)
+#     if parsed_static_url.hostname and parsed_static_url.hostname not in ALLOWED_HOSTS:
+#         ALLOWED_HOSTS.append(parsed_static_url.hostname)
 
 # For local development when DEBUG is True
 if DEBUG:
     ALLOWED_HOSTS.append('localhost')
     ALLOWED_HOSTS.append('127.0.0.1')
 
-# If ALLOWED_HOSTS is empty after the above, and you are in production (DEBUG=False),
-# Django will raise an error. Ensure at least one production domain is added.
-# As a fallback, you might need to manually add your Railway domain if the env var isn't picked up initially:
+# If ALLOWED_HOSTS is still empty in production (DEBUG=False),
+# it means RAILWAY_PUBLIC_DOMAIN was not set or was invalid.
+# Django will raise a DisallowedHost error, which is good for security.
+# You could add a more explicit error here if you want:
 # if not DEBUG and not ALLOWED_HOSTS:
-#     # Replace 'your-app-name.up.railway.app' with your actual Railway domain
-#     ALLOWED_HOSTS.append('your-app-name.up.railway.app')
+#     from django.core.exceptions import ImproperlyConfigured
+#     raise ImproperlyConfigured(
+#         "ALLOWED_HOSTS is not set. Ensure the RAILWAY_PUBLIC_DOMAIN environment variable is correctly set in your Railway service."
+#     )
 
 
 # Application definition
