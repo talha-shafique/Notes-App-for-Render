@@ -15,6 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = [] # Initialize as an empty list
 
 # Get the domain from RAILWAY_PUBLIC_DOMAIN if it's set
 RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
@@ -26,17 +27,12 @@ if RAILWAY_PUBLIC_DOMAIN:
         parsed_url = urlparse(RAILWAY_PUBLIC_DOMAIN)
         if parsed_url.hostname:
             ALLOWED_HOSTS.append(parsed_url.hostname)
+            # Add to CSRF_TRUSTED_ORIGINS with the scheme
+            CSRF_TRUSTED_ORIGINS.append(f"{parsed_url.scheme}://{parsed_url.hostname}")
     else: # Assume it's already a hostname
         ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
-
-# You can remove or comment out the old RAILWAY_STATIC_URL logic for ALLOWED_HOSTS
-# if RAILWAY_PUBLIC_DOMAIN is reliably providing your app's main domain.
-# Example of old logic you might have:
-# RAILWAY_STATIC_URL = os.environ.get('RAILWAY_STATIC_URL')
-# if RAILWAY_STATIC_URL:
-#     parsed_static_url = urlparse(RAILWAY_STATIC_URL)
-#     if parsed_static_url.hostname and parsed_static_url.hostname not in ALLOWED_HOSTS:
-#         ALLOWED_HOSTS.append(parsed_static_url.hostname)
+        # Add to CSRF_TRUSTED_ORIGINS, assuming https
+        CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_PUBLIC_DOMAIN}")
 
 # For local development when DEBUG is True
 if DEBUG:
@@ -47,10 +43,11 @@ if DEBUG:
 # it means RAILWAY_PUBLIC_DOMAIN was not set or was invalid.
 # Django will raise a DisallowedHost error, which is good for security.
 # You could add a more explicit error here if you want:
-# if not DEBUG and not ALLOWED_HOSTS:
+# if not DEBUG and not ALLOWED_HOSTS and not CSRF_TRUSTED_ORIGINS: # Check CSRF_TRUSTED_ORIGINS too
 #     from django.core.exceptions import ImproperlyConfigured
 #     raise ImproperlyConfigured(
-#         "ALLOWED_HOSTS is not set. Ensure the RAILWAY_PUBLIC_DOMAIN environment variable is correctly set in your Railway service."
+#         "ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS are not set. "
+#         "Ensure the RAILWAY_PUBLIC_DOMAIN environment variable is correctly set in your Railway service."
 #     )
 
 
