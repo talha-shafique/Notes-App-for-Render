@@ -1,6 +1,7 @@
 import os
 import dj_database_url # Add this import
 from pathlib import Path
+from urllib.parse import urlparse # Add this for parsing Railway URL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,13 +15,34 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = []
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-# You might also want to add your local development host if you switch DEBUG dynamically
-# if DEBUG:
-#     ALLOWED_HOSTS.append('localhost')
-#     ALLOWED_HOSTS.append('127.0.0.1')
+# For Railway, they provide a domain like your-service-name.up.railway.app
+# You can get this from your Railway dashboard once deployed, or Railway might set an env var.
+RAILWAY_STATIC_URL = os.environ.get('RAILWAY_STATIC_URL') # Railway often sets this
+if RAILWAY_STATIC_URL:
+    # RAILWAY_STATIC_URL might be the full URL (e.g., https://...). We need the hostname.
+    parsed_url = urlparse(RAILWAY_STATIC_URL)
+    if parsed_url.hostname:
+        ALLOWED_HOSTS.append(parsed_url.hostname)
+
+# It's a good idea to also add your specific service domain if you know it,
+# e.g., 'my-django-notes-app.up.railway.app' (replace with your actual Railway service domain)
+# You can find this on your Railway project's settings page after the first deploy attempt.
+# Example:
+# MY_RAILWAY_APP_DOMAIN = os.environ.get('MY_RAILWAY_APP_DOMAIN') # If you set this custom env var
+# if MY_RAILWAY_APP_DOMAIN:
+#     ALLOWED_HOSTS.append(MY_RAILWAY_APP_DOMAIN)
+
+# For local development when DEBUG is True
+if DEBUG:
+    ALLOWED_HOSTS.append('localhost')
+    ALLOWED_HOSTS.append('127.0.0.1')
+
+# If ALLOWED_HOSTS is empty after the above, and you are in production (DEBUG=False),
+# Django will raise an error. Ensure at least one production domain is added.
+# As a fallback, you might need to manually add your Railway domain if the env var isn't picked up initially:
+# if not DEBUG and not ALLOWED_HOSTS:
+#     # Replace 'your-app-name.up.railway.app' with your actual Railway domain
+#     ALLOWED_HOSTS.append('your-app-name.up.railway.app')
 
 
 # Application definition
@@ -75,7 +97,8 @@ DATABASES = {
     'default': dj_database_url.config(
         # Feel free to alter this value to suit your needs.
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}', # Fallback to SQLite for local dev
-        conn_max_age=600
+        conn_max_age=600,
+        ssl_require=os.environ.get('DATABASE_SSL_REQUIRE', 'False').lower() == 'true' # For Railway PostgreSQL, SSL is often required
     )
 }
 
