@@ -5,15 +5,15 @@ body {
     color: #000; /* Black text */
     font-family: "Dosis", sans-serif;
     margin: 0;
-    padding: 20px; /* Added some padding to the body */
+    padding: 10px; /* Added body padding */
 }
 
 .create-note-container {
     display: flex;
     justify-content: center;
     align-items: center; 
-    padding-top: 3vh; /* Slightly reduced top padding */
-    margin-bottom: 40px; /* Added margin below the create button container */
+    padding-top: 1vh; /* This is quite small, might need to be larger e.g., 5vh or 20px */
+    margin-bottom: 60px; /* This should pull the notes list up */
     width: 100%; 
 }
 
@@ -73,7 +73,7 @@ button:hover::before, .cta-button:hover::before {
 .notes-area-wrapper { /* New wrapper for all date groups */
     width: 100%;
     max-width: 1750px; /* Adjust as needed */
-    margin-left: 5%;  /* Shift to the left, adjust percentage as needed */
+    margin-left: auto;  /* Shift to the left, adjust percentage as needed */
     margin-right: auto; /* Keep it from going too far right if window is wide */
 }
 
@@ -89,6 +89,7 @@ button:hover::before, .cta-button:hover::before {
     color: #333;
     margin-bottom: 20px; /* Increased margin */
     border-bottom: 4px solid #eee;
+    width: 98%;
     padding-bottom: 8px; /* Increased padding */
 }
 
@@ -158,6 +159,7 @@ button:hover::before, .cta-button:hover::before {
     font-weight: 600;
     margin-bottom: 15px;
     line-height: 1.4;
+    white-space: pre-line; /* Add this line to preserve line breaks and whitespace */
     /* max-height: 4.2em; /* REMOVED */
     /* overflow: hidden; /* REMOVED */
     /* text-overflow: ellipsis; /* REMOVED - truncatewords handles ellipsis */
@@ -171,6 +173,7 @@ button:hover::before, .cta-button:hover::before {
     margin-bottom: 15px;
     line-height: 1.4;
     display: none; /* Ensure it's hidden by default via CSS too */
+    white-space: pre-line;
 }
 
 .show-more-link {
@@ -256,16 +259,17 @@ button:hover::before, .cta-button:hover::before {
 .no-notes-message {
     text-align: center;
     margin-top: 50px; /* More margin for this message */
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: #777;
 }
 
+/* This is the .notes-area-wrapper for your main notes list on the home page. */
 .notes-area-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 80vh;
-    justify-content: center;
+    width: 100%;
+    max-width: 1750px;
+    margin-left: auto;  /* Changed from 5% to auto for centering */
+    margin-right: auto;
+    /* Ensure this definition does NOT contain flexbox centering or min-height properties from the other definition */
 }
 .form-title {
     font-size: 2.5rem;
@@ -273,12 +277,80 @@ button:hover::before, .cta-button:hover::before {
     color: #222;
     margin-bottom: 10px;
     letter-spacing: 0.5px;
+    text-align: center;
 }
 .form-heading {
     font-size: 1.25rem;
     font-weight: 600;
     color: #555;
     margin-bottom: 18px;
+    text-align: center;
+}
+.form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Increased gap for better spacing */
+    background-color: #ffffff;
+    padding: 30px; /* Increased padding */
+    border-radius: 12px; /* More rounded corners for the form itself */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    border: 1px solid #e0e0e0; /* Subtle border for the form */
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Spacing between label and input */
+}
+
+.form-field label {
+    font-weight: 500; /* Slightly bolder labels */
+    color: #333; /* Darker label color */
+    font-size: 0.95rem; /* Adjusted label size */
+}
+
+/* Styling for text inputs, password inputs, email inputs, etc. */
+.form-field input[type="text"],
+.form-field input[type="password"],
+.form-field input[type="email"],
+.form-field input[type="number"],
+.form-field input[type="url"],
+.form-field input[type="date"],
+.form-field textarea {
+    padding: 12px 15px; /* Increased padding for a modern feel */
+    border: 1px solid #ccc; /* Softer border color */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 1rem; /* Standard font size for input text */
+    color: #333;
+    background-color: #f9f9f9; /* Slightly off-white background */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus */
+    width: 100%; /* Ensure inputs take full width of their container */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.form-field input[type="text"]:focus,
+.form-field input[type="password"]:focus,
+.form-field input[type="email"]:focus,
+.form-field input[type="number"]:focus,
+.form-field input[type="url"]:focus,
+.form-field input[type="date"]:focus,
+.form-field textarea:focus {
+    border-color: #007bff; /* Highlight border on focus - adjust color as needed */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Add a glow effect on focus */
+    outline: none; /* Remove default browser outline */
+}
+
+.form-field .help-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #666;
+    margin-top: 4px;
+}
+
+.form-field .error-text {
+    font-size: 0.85rem;
+    color: #dc3545; /* Bootstrap's danger color for errors */
+    margin-top: 4px;
 }
 .form-wrapper {
     background: #fff;
@@ -292,7 +364,7 @@ button:hover::before, .cta-button:hover::before {
     flex-direction: column;
     align-items: stretch;
     gap: 28px;
-    margin-top: 18px;
+    margin: 18px auto; /* Corrected from margin-top: 18px auto; */
 }
 .form-field {
     display: flex;
@@ -308,20 +380,26 @@ button:hover::before, .cta-button:hover::before {
 }
 
 .form-wrapper input[type="text"],
+.form-wrapper input[type="password"], /* Added input[type="password"] */
+.form-wrapper input[type="email"],    /* Added input[type="email"] for consistency */
 .form-wrapper textarea {
     background: #f8f9fa;
     border: 1.5px solid #111;
     border-radius: 9px;
     padding: 13px 15px;
-    font-size: 1.3rem;
+    font-size: 1.3rem; /* This sets the size of the text inside the input */
     color: #222;
     transition: border 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 8px -3px rgba(0,0,0,0.07);
     outline: none;
-    font-family: "Dosis", sans-serif;
-    font-weight: 500; /* Set to 400 for normal weight */
+    font-family: "Dosis", sans-serif; /* This explicitly applies the Dosis font */
+    font-weight: 500; /* This sets the Dosis font weight to medium */
+    width: 100%; 
+    box-sizing: border-box; 
 }
 .form-wrapper input[type="text"]:focus,
+.form-wrapper input[type="password"]:focus, /* Added input[type="password"]:focus */
+.form-wrapper input[type="email"]:focus,    /* Added input[type="email"]:focus */
 .form-wrapper textarea:focus {
     border: 1.5px solid #111;
     box-shadow: 0 4px 16px -6px #1112;
@@ -373,12 +451,14 @@ button:hover::before, .cta-button:hover::before {
     padding: 10px 26px; /* Reference padding */
     margin-top: 32px;
     box-shadow: 0 2px 8px -2px rgba(0,0,0,0.08);
-    display: inline-block;
+    display: block; /* Changed from inline-block */
     text-decoration: none;
     border: 1.5px solid #111;
     transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-    width: auto; /* Explicitly set for consistency, though inline-block defaults to this */
-    text-align: center; /* Ensures text is centered */
+    width: fit-content; /* Adjust width to content size */
+    text-align: center; /* Ensures text is centered within the button */
+    margin-left: auto; /* Add to center the block */
+    margin-right: auto; /* Add to center the block */
 }
 .back-link:hover {
     background: #111;
@@ -391,4 +471,72 @@ button:hover::before, .cta-button:hover::before {
 .error-text {
     color: #d32f2f;
     font-size: 0.98em;
+}
+.auth-switch-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #555;
+    font-weight: 500
+}
+
+.auth-switch-link a {
+    color: #007bff; /* Or your primary theme color */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-switch-link a:hover {
+    text-decoration: underline;
+}
+
+/* Navigation Bar Styles - Modified for a floating button container */
+.top-nav {
+    float: right; /* Position the container to the right */
+    margin: 15px 20px 20px 0; /* Top, Right, Bottom, Left margins */
+    /* Removed background, padding, display:flex, justify-content, align-items, border-bottom */
+}
+
+/* Logout Button Styles - Styled like a smaller .cta-button */
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px; /* Smaller padding than .cta-button */
+    border: unset;
+    border-radius: 8px; /* Updated to 8px to match ::before */
+    color: #ececec; /* Default text color from .cta-button */
+    z-index: 1;
+    background: #4a4a4a; /* Default background from .cta-button */
+    position: relative;
+    font-family: "Dosis", sans-serif;
+    font-weight: 700; /* Slightly less bold than .cta-button */
+    font-size: 1rem; /* Smaller font size */
+    -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27); /* Shadow from .cta-button */
+    box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27); /* Shadow from .cta-button */
+    transition: all 250ms;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.logout-button::before {
+    content: "";
+    position: absolute;
+    bottom: 0; /* Start animation from the bottom */
+    left: 0;
+    height: 0; /* Start with no height */
+    width: 100%; /* Full width */
+    border-radius: 8px; /* Match button's border-radius */
+    background-color: #212121; /* New hover background color (blue) */
+    z-index: -1;
+    transition: all 250ms;
+}
+
+.logout-button:hover {
+    color: #e8e8e8; /* Hover text color from .cta-button:hover */
+    background: transparent; /* Make the button's own background transparent on hover */
+}
+
+.logout-button:hover::before {
+    height: 100%; /* Fill height on hover for bottom-to-top effect */
 }

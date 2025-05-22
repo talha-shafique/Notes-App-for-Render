@@ -2,11 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import note
 from .forms import NoteForm
 from django.db.models.functions import TruncDate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from .forms import SignUpForm
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def note_list(request):
     # Grouping notes by date and ordering by date
-    notes = note.objects.annotate(date_only=TruncDate('created_at'))
+    notes = note.objects.filter(user=request.user).annotate(date_only=TruncDate('created_at'))
     
     # Create a dictionary to store grouped notes by date
     grouped_notes = {}
@@ -18,12 +22,14 @@ def note_list(request):
     return render(request, 'noteapp/note_list.html', {'grouped_notes': grouped_notes})
 
 
-
+@login_required
 def add_note(request):
     if request.method=='POST':
         form=NoteForm(request.POST)
         if form.is_valid():
-            form.save()
+            note=form.save(commit=False)
+            note.user=request.user
+            note.save()
             return redirect('note_list')
     else:
         form=NoteForm()
@@ -31,7 +37,7 @@ def add_note(request):
 
 
 
-
+@login_required
 def edit_note(request, id):
     Note = get_object_or_404(note, id=id)
     if request.method=='POST':
@@ -45,8 +51,25 @@ def edit_note(request, id):
 
 
 
-
+@login_required
 def delete_note(request, id):
     Note=get_object_or_404(note, id=id)
     Note.delete()
     return redirect('note_list')   
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # log the user in after signing up
+            return redirect('note_list')  # redirect to home page or notes list
+    else:
+        form = SignUpForm()
+    return render(request, 'noteapp/signup.html', {'form': form})
+
+
+
+
+

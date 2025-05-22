@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Notes App{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="top-nav"> {# This is your new navbar #}
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Logout</button> {# Styled logout button #}
+            </form>
+        {% endif %}
+    </header>
+
+    <main>
+        {% block content %}
+            {# Page-specific content will be inserted here #}
+        {% endblock %}
+    </main>
+
+    {% block extra_js %}
+        {# Common JS like main.js can go here #}
+        <script src="{% static 'js/main.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

@@ -1,16 +1,14 @@
-{% load static %} <!-- Make sure static is loaded if you haven't already -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Notes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends "noteapp/base.html" %}
+{% load static %}
+
+{% block title %}My Notes{% endblock %}
+
+{% block content %}
+    {# The old logout form that was here (lines 12-16 of your previous version) MUST be removed. #}
+    {# The new logout button will come from base.html's header. #}
+
     <div class="create-note-container">
-        <a href="{% url 'add_note' %}" class="cta-button"> 
+        <a href="{% url 'add_note' %}" class="cta-button">
             Create New Note
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
@@ -27,7 +25,7 @@
                         {% for item in notes_in_date %}
                             <div class="note-card">
                                 <div class="note-title">{{ item.title }}</div>
-                                <div class="note-content-preview">{{ item.content|truncatewords_html:20 }}</div> <!-- Consider truncatewords_html if content has HTML -->
+                                <div class="note-content-preview">{{ item.content|linebreaksbr|truncatewords_html:20 }}</div>
                                 <div class="note-content-full" style="display: none;">{{ item.content|linebreaksbr }}</div>
                                 <a href="#" class="show-more-link">Show More</a>
                                 <div class="note-actions">
@@ -43,7 +41,14 @@
             <p class="no-notes-message">No notes yet. Create one!</p>
         {% endif %}
     </div>
+{% endblock %}
 
-    <script src="{% static 'js/main.js' %}"></script> <!-- Add this line -->
+{# The <script src="{% static 'js/main.js' %}"></script> line, </body>, and </html> #}
+{# MUST be removed from the end of this file. They are now handled by base.html #}
+{# If you have JavaScript specific to ONLY this page, you can put it in an extra_js block: #}
+{# {% block extra_js %} #}
+{#    {{ block.super }} <!- This includes scripts from base.html's extra_js block -> #}
+{#    <script src="{% static 'js/my_notes_list_specific_script.js' %}"></script> #}
+{# {% endblock %} #}
 </body>
 </html>
